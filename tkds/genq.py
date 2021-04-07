@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
-def genera_queries_calidad(fecha_inicial, fecha_final, tipo):
+def genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay):
 
   if fecha_final is None:
     fecha_final = datetime.today().strftime("%Y-%m-%d")
@@ -121,7 +121,7 @@ def genera_queries_calidad(fecha_inicial, fecha_final, tipo):
         FECHA_REVISION as fch_revision, 
         ESTATUS as estatus, 
         CLASIFICACION_DESVIOS as patron
-      FROM `fugasfraudesgmma-pro.layout_hi.GMM_LAYH_2021_TEMP` 
+      FROM `{lay}` 
       WHERE REGLAS = "NuevosM" and TRAMITE_UNICO='1'
       UNION ALL 
         SELECT id_registro_HI as id_registro, 
@@ -139,7 +139,7 @@ def genera_queries_calidad(fecha_inicial, fecha_final, tipo):
     LEFT JOIN CONSUMO USING(id_registro, fch_registro)
     LEFT JOIN LAY USING(id_registro, fecha_ejecucion)
     WHERE score_alerta is not null and num=1
-    """.format(fecha_inicial=fecha_inicial, fecha_final=fecha_final)
+    """.format(fecha_inicial=fecha_inicial, fecha_final=fecha_final, lay=lay)
 
   else:
     raise Exception('El tipo de query debe ser total o alerta')

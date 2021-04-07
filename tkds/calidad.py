@@ -4,12 +4,16 @@ import pandas_gbq as pbq
 from datetime import datetime
 from tkds import genq
 
-def cargar_datos(fecha_inicial, fecha_final=None, tipo = "alertas", proyecto = "fugasfraudesgmma-pro"):
+def cargar_datos(fecha_inicial, 
+	fecha_final=None, 
+	tipo = "alertas", 
+	proyecto = "fugasfraudesgmma-pro",
+	lay="fugasfraudesgmma-pro.layout_hi.GMM_LAYH_2021_TEMP"):
 	"""
 	Función para obtener datos para el análisis de calidad
 	"""
 
-	query = genq.genera_queries_calidad(fecha_inicial, fecha_final, tipo)
+	query = genq.genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay)
 
 	df = pbq.read_gbq(query, project_id = proyecto)
 
