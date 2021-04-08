@@ -13,7 +13,7 @@ def genera_queries_calidad(fecha_inicial, fecha_final, lay, lay_20, consumo, eva
     query = f"""
     WITH CONSUMO AS(
     SELECT DISTINCT *
-    FROM `"{consumo}"`
+    FROM `{consumo}`
     WHERE fch_registro  BETWEEN '{fecha_inicial}' AND '{fecha_final}'
     ),
     MOD4_1 AS (
