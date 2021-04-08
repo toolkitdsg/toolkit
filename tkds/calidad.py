@@ -31,7 +31,7 @@ def f_efectividad(arr):
     return arr.sum()/arr.count()*100
 
 
-def grafica_linea(df, var):
+def grafica_linea(df, var, ax):
 
 	df_plot = df[[var, 'fecha']].groupby('fecha').mean()
 
@@ -41,7 +41,7 @@ def grafica_linea(df, var):
 	ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b'))
 	ax.set(title = f"Porcentaje de Calidad Diaria")
 
-def grafica_barras(df, var):
+def grafica_barras(df, var, ax):
 
 	df_plot = df[['fch_registro', var]].\
 	groupby(pd.Grouper(key='fch_registro',freq='W')).mean()
