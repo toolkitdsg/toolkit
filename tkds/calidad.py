@@ -70,10 +70,7 @@ def grafica_linea2(df, df2, var, ax, ax2):
 	ax2.set_ylabel('% Efectividad')
 	ax.xaxis.set_major_locator(mdates.DayLocator(interval=7))
 	ax.xaxis.set_major_formatter(mdates.DateFormatter('%d-%b'))
-	handles, labels = ax.get_legend_handles_labels()
-	handles2, labels2 = ax2.get_legend_handles_labels()
 	ax.set(title = f"Calidad vs Efectividad Diaria")
-	fig.legend(handles+handles2, labels+labels2)
 
 def grafica_barras2(df, df2, var, ax, ax2):
 	df_plot = pd.concat([df[[var, 'fch_registro']].\
