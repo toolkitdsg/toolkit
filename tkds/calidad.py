@@ -4,6 +4,10 @@ import pandas_gbq as pbq
 from datetime import datetime
 from tkds import genq
 
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from datetime import timedelta
+
 def cargar_datos(fecha_inicial, proyecto, lay, lay_20, consumo, evaluacion, alertas,
 	fecha_final=None, 
 	tipo = "alertas"):
