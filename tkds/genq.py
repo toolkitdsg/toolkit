@@ -2,7 +2,7 @@ import numpy as np
 import pandas as pd
 from datetime import datetime
 
-def genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay):
+def genera_queries_calidad(fecha_inicial, fecha_final, lay, lay_20, consumo, evaluacion, alertas, tipo):
 
   if fecha_final is None:
     fecha_final = datetime.today().strftime("%Y-%m-%d")
@@ -10,78 +10,78 @@ def genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay):
   print("Datos a cargar del ", fecha_inicial, " al ", fecha_final)
 
   if tipo == "total":
-    query = """
+    query = f"""
     WITH CONSUMO AS(
     SELECT DISTINCT *
-    FROM `fugasfraudesgmma-pro.modelo_cd.sabana_consumo_acum`
+    FROM `"{consumo}"`
     WHERE fch_registro  BETWEEN '{fecha_inicial}' AND '{fecha_final}'
     ),
     MOD4_1 AS (
       SELECT id_registro, fch_registro, AVG(score_1) as score_mod4_v1
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo4_v3_recal1'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     MOD4_2 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_mod4_v2
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo4_v3_recal2'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     PADRE_1 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_padre_v1
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_padre_recal1'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     PADRE_2 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_padre_v2
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_padre_recal2'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     PATRON_1 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_patron_v1
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_patrones_recal1'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     PATRON_2 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_patron_v2
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_patrones_recal2'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     ICD_1 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_icd_v1
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_sin_icd_excluidos_recal1'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     ICD_2 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_icd_v2
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_sin_icd_excluidos_recal2' 
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     INV_1 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_inv_v1
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_sin_invalidos_recal1'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
       ),
     INV_2 AS (
       SELECT DISTINCT id_registro, fch_registro, avg(score_1) as score_inv_v2
-      FROM `fugasfraudesgmma-pro.modelo_cd.evaluacion_acumulada`
+      FROM `{evaluacion}`
       WHERE model_name = 'modelo_sin_invalidos_recal2'
       AND fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_registro
@@ -98,20 +98,20 @@ def genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay):
     LEFT JOIN ICD_2 USING (id_registro, fch_registro)
     LEFT JOIN INV_1 USING (id_registro, fch_registro)
     LEFT JOIN INV_2 USING (id_registro, fch_registro)
-    """.format(fecha_inicial=fecha_inicial, fecha_final=fecha_final)
+    """
 
   elif tipo == "alertas":
-    query = """
+    query = f"""
     WITH ALERTAS AS (
       SELECT id_registro, fch_registro, CAST(fecha_ejecucion AS DATE) AS fecha_ejecucion, model_name, 
       AVG(score_1) as score_alerta
-      FROM `fugasfraudesgmma-pro.modelo_cd.alertas_acumuladas`
+      FROM `{alertas}`
       WHERE fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       GROUP BY id_registro, fch_Registro, fecha_ejecucion, model_name
       ),
     CONSUMO AS(
       SELECT *, row_number() over (partition by id_registro, fch_registro) as num
-      FROM `fugasfraudesgmma-pro.modelo_cd.sabana_consumo_acum`
+      FROM `{consumo}`
       WHERE fch_registro BETWEEN '{fecha_inicial}' AND '{fecha_final}'
       ),
     LAY AS (
@@ -130,7 +130,7 @@ def genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay):
         FECHA_REVISION as fch_revision, 
         ESTATUS as estatus, 
         CLASIFICACION_DESVIOS as patron
-      FROM `fugasfraudesgmma-pro.layout_hi.GMM_LAYHI_20E`
+      FROM `{lay_20}`
       WHERE REGLAS = "NuevosM" and TRAMITE_UNICO='1'
       AND FECHA_ASIGNACION BETWEEN '{fecha_inicial}' AND '{fecha_final}'
     )
@@ -139,7 +139,7 @@ def genera_queries_calidad(fecha_inicial, fecha_final, tipo, lay):
     LEFT JOIN CONSUMO USING(id_registro, fch_registro)
     LEFT JOIN LAY USING(id_registro, fecha_ejecucion)
     WHERE score_alerta is not null and num=1
-    """.format(fecha_inicial=fecha_inicial, fecha_final=fecha_final, lay=lay)
+    """
 
   else:
     raise Exception('El tipo de query debe ser total o alerta')
