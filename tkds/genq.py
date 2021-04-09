@@ -147,7 +147,7 @@ def genera_queries_calidad(fecha_inicial, fecha_final, lay, lay_20, consumo, eva
 
   return query
 
-def query_test(alertas_train, evaluacion_train, lay_train):
+def query_test(alertas_train, evaluacion_train, lay_train, lay_train_test):
   query = f"""
   WITH ALERTAS AS (
     SELECT distinct id_registro,  fch_registro, model_name as modelo_hits
@@ -158,7 +158,7 @@ def query_test(alertas_train, evaluacion_train, lay_train):
   ),
   LAY AS (
     SELECT distinct id_registro, fch_registro, estatus, CLASIFICACION_DE_DESVIOS as patron, train
-    FROM `{lay_train}` 
+    FROM `{lay_train_test}` 
     LEFT JOIN (SELECT id_registro, fch_registro, "Train" as train
     FROM `{lay_train}`)
     USING(id_registro, fch_registro)
