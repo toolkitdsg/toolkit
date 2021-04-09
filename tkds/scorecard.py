@@ -3,6 +3,11 @@ import pandas as pd
 import pandas_gbq as pbq
 from tkds import genq
 
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+from datetime import timedelta
+import seabron as sns
+
 
 def tablas_alertas(fecha_inicial, fecha_final, 
   lay="fugasfraudesgmma-qa.layout_hi.GMM_LAYH_2021_TEMP", 
