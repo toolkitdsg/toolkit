@@ -10,10 +10,10 @@ from datetime import timedelta
 import seaborn as sns
 
 
-def tablas_alertas(fecha_inicial, fecha_final, lay, project_id):
+def tablas_alertas(fecha_inicial, fecha_final, lay, alertas, alertas_qa, project_id):
   
   # Se obtiene el query
-  query = genq.query_alertas(fecha_inicial, fecha_final, lay)
+  query = genq.query_alertas(fecha_inicial, fecha_final, lay, alertas, alertas_qa)
 
   # Se carga la tabla
   df = pbq.read_gbq(query, project_id = project_id)
