@@ -10,9 +10,7 @@ from datetime import timedelta
 import seaborn as sns
 
 
-def tablas_alertas(fecha_inicial, fecha_final, 
-  lay="fugasfraudesgmma-qa.layout_hi.GMM_LAYH_2021_TEMP", 
-  project_id="fugasfraudesgmma-qa"):
+def tablas_alertas(fecha_inicial, fecha_final, lay, project_id):
   
   # Se obtiene el query
   query = genq.query_alertas(fecha_inicial, fecha_final, lay)

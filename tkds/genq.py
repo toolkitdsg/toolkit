@@ -158,7 +158,7 @@ def query_test(alertas_train, evaluacion_train, lay_train):
   ),
   LAY AS (
     SELECT distinct id_registro, fch_registro, estatus, CLASIFICACION_DE_DESVIOS as patron, train
-    FROM `fugasfraudesgmma-qa.recalibraciones.recal2_sabana_padre` 
+    FROM `{lay_train}` 
     LEFT JOIN (SELECT id_registro, fch_registro, "Train" as train
     FROM `{lay_train}`)
     USING(id_registro, fch_registro)
@@ -171,15 +171,15 @@ def query_test(alertas_train, evaluacion_train, lay_train):
   return query
 
 
-def query_alertas(fecha_inicial, fecha_final, lay):
+def query_alertas(fecha_inicial, fecha_final, lay, alertas, alertas_qa):
   query = f"""
   WITH QATAB AS (
   SELECT distinct id_registro, cast(fch_registro as date) as fch_registro_qa, cast(fecha_ejecucion as date) as fch_ejecucion, score_1 as score_qa, model_name as model_name_qa
-  FROM `fugasfraudesgmma-qa.modelo_cd.alertas_acumuladas` 
+  FROM `{alertas_qa}` 
   WHERE fch_registro between '2021-01-18' and '2021-02-04'),
   PROTAB AS (
   SELECT distinct id_registro, cast(fch_registro as date) as fch_registro_pro, cast(fecha_ejecucion as date) as fch_ejecucion, score_1 as score_pro, model_name as model_name_pro
-  FROM `fugasfraudesgmma-pro.modelo_cd.alertas_acumuladas` 
+  FROM `{alertas}` 
   ),
   LAY AS (
     SELECT id_registro_HI as id_registro, 
