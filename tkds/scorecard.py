@@ -6,7 +6,7 @@ from tkds import genq
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
 from datetime import timedelta
-import seabron as sns
+import seaborn as sns
 
 
 def tablas_alertas(fecha_inicial, fecha_final, 
