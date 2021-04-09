@@ -147,20 +147,20 @@ def genera_queries_calidad(fecha_inicial, fecha_final, lay, lay_20, consumo, eva
 
   return query
 
-def query_test():
+def query_test(alertas_train, evaluacion_train, lay_train):
   query = f"""
   WITH ALERTAS AS (
     SELECT distinct id_registro,  fch_registro, model_name as modelo_hits
-    FROM `fugasfraudesgmma-qa.modelo_cd.alertas_train`),
+    FROM `{alertas_train}`),
   EVAL AS (
   SELECT id_registro, fch_registro, score_1, model_name as modelo
-  FROM `fugasfraudesgmma-qa.modelo_cd.evaluacion_train`
+  FROM `{evaluacion_train}`
   ),
   LAY AS (
     SELECT distinct id_registro, fch_registro, estatus, CLASIFICACION_DE_DESVIOS as patron, train
     FROM `fugasfraudesgmma-qa.recalibraciones.recal2_sabana_padre` 
     LEFT JOIN (SELECT id_registro, fch_registro, "Train" as train
-    FROM `fugasfraudesgmma-qa.recalibraciones.recal2_sabana_padre_train`)
+    FROM `f{lay_train}`)
     USING(id_registro, fch_registro)
     )
   SELECT LAY.id_registro, fch_registro, score_1, estatus, patron, modelo, modelo_hits, ifnull(train, "test") as train_test
