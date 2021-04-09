@@ -160,7 +160,7 @@ def query_test(alertas_train, evaluacion_train, lay_train):
     SELECT distinct id_registro, fch_registro, estatus, CLASIFICACION_DE_DESVIOS as patron, train
     FROM `fugasfraudesgmma-qa.recalibraciones.recal2_sabana_padre` 
     LEFT JOIN (SELECT id_registro, fch_registro, "Train" as train
-    FROM `f{lay_train}`)
+    FROM `{lay_train}`)
     USING(id_registro, fch_registro)
     )
   SELECT LAY.id_registro, fch_registro, score_1, estatus, patron, modelo, modelo_hits, ifnull(train, "test") as train_test
