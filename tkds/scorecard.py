@@ -324,7 +324,8 @@ def grafica_escenarios(df, ax, ax2):
                   xy=(j,i),
                   ha='left', 
                   va='center',
-                  fontweight = 'semibold')
+                  fontweight = 'semibold',
+                  fontsize = 10)
       
   for i,j in zip(df_plot['modelo eliminado'],df_plot['Efectividad']):
       ax2.annotate(str(int(j))+'%',
@@ -332,7 +333,8 @@ def grafica_escenarios(df, ax, ax2):
                   ha='center', 
                   va='center',
                   color = 'darkgreen',
-                  fontweight = 'semibold')
+                  fontweight = 'semibold',
+                  fontsize = 10)
   ax.set_xlabel('Alertas')
   ax2.set_xlabel('% Efectividad')
   ax.set_ylabel('Modelos descartados')
