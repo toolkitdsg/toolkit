@@ -35,7 +35,6 @@ def tablas_alertas(fecha_inicial, fecha_final, lay, alertas, alertas_qa, project
   df_wide = df.melt(['id_registro',
                    'fch_registro',
                    'fch_asignacion',
-                   'fch_revision',
                    'score_qa',
                    'score_pro',
                    'score_1', 

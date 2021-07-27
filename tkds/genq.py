@@ -185,7 +185,6 @@ def query_alertas(fecha_inicial, fecha_final, lay, alertas, alertas_qa):
     SELECT id_registro_HI as id_registro, 
       SCORE as score_1, 
       FECHA_ASIGNACION as fch_asignacion, 
-      FECHA_REVISION as fch_revision, 
       ESTATUS as estatus, 
       CLASIFICACION_DESVIOS as patron
     FROM `{lay}` 
