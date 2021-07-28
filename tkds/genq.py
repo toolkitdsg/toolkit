@@ -201,7 +201,7 @@ def query_alertas(fecha_inicial, fecha_final, lay, alertas, alertas_qa):
   FROM QATAB
   full JOIN PROTAB USING (id_registro, fch_ejecucion)
   )
-  SELECT LAY.id_registro, fch_registro, fch_asignacion, fch_revision, score_qa, score_pro, score_1, estatus, patron, model_name_qa, model_name_pro, model_name, ambiente
+  SELECT LAY.id_registro, fch_registro, fch_asignacion, score_qa, score_pro, score_1, estatus, patron, model_name_qa, model_name_pro, model_name, ambiente
   from LAY
   left join ALERT on LAY.id_registro = ALERT.id_registro AND fch_asignacion = fch_ejecucion
   """
